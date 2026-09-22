@@ -30,21 +30,14 @@ namespace UpdateAllMyRepos2
         BaseAddress = new Uri("https://api.github.com/")
       };
 
-      _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
-          "GitHubBackup/1.0");
+      _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("GitHubBackup/1.0");
 
-      _httpClient.DefaultRequestHeaders.Authorization =
-          new AuthenticationHeaderValue("Bearer", _token);
+      _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
 
-      _httpClient.DefaultRequestHeaders.Accept.Add(
-          new MediaTypeWithQualityHeaderValue(
-              "application/vnd.github+json"));
+      _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
     }
 
-    public async Task<List<GitHubRepository>>
-        GetRepositoriesAsync(
-            CancellationToken cancellationToken =
-                default(CancellationToken))
+    public async Task<List<GitHubRepository>> GetRepositoriesAsync(CancellationToken cancellationToken = default(CancellationToken))
     {
       var repositories = new List<GitHubRepository>();
 
@@ -53,32 +46,22 @@ namespace UpdateAllMyRepos2
 
       while (true)
       {
-        string url =
-            $"user/repos?per_page={perPage}" +
+        string url = $"user/repos?per_page={perPage}" +
             $"&page={page}" +
             "&affiliation=owner,collaborator,organization_member";
 
-        using (HttpResponseMessage response =
-            await _httpClient.GetAsync(
-                url,
-                cancellationToken))
+        using (HttpResponseMessage response = await _httpClient.GetAsync(url, cancellationToken))
         {
-          string json =
-              await response.Content.ReadAsStringAsync();
+          string json = await response.Content.ReadAsStringAsync();
 
           if (!response.IsSuccessStatusCode)
           {
-            throw new Exception(
-                $"GitHub API : {(int)response.StatusCode}\n" +
-                json);
+            throw new Exception( $"GitHub API : {(int)response.StatusCode}\n" + json);
           }
 
-          var pageRepositories =
-              JsonConvert.DeserializeObject<
-                  List<GitHubRepository>>(json);
+          var pageRepositories = JsonConvert.DeserializeObject<List<GitHubRepository>>(json);
 
-          if (pageRepositories == null ||
-              pageRepositories.Count == 0)
+          if (pageRepositories == null || pageRepositories.Count == 0)
           {
             break;
           }
@@ -86,7 +69,9 @@ namespace UpdateAllMyRepos2
           repositories.AddRange(pageRepositories);
 
           if (pageRepositories.Count < perPage)
+          {
             break;
+          }
 
           page++;
         }
@@ -98,16 +83,19 @@ namespace UpdateAllMyRepos2
     public async Task SyncRepositoriesAsync(IEnumerable<GitHubRepository> repositories, string destinationDirectory, int maxParallelism, IProgress<RepositorySyncProgress> progress = null, CancellationToken cancellationToken = default(CancellationToken))
     {
       if (repositories == null)
+      {
         throw new ArgumentNullException(nameof(repositories));
+      }
 
       if (string.IsNullOrWhiteSpace(destinationDirectory))
-        throw new ArgumentException(
-            "Le répertoire de destination est obligatoire.",
-            nameof(destinationDirectory));
+      {
+        throw new ArgumentException("Le répertoire de destination est obligatoire.", nameof(destinationDirectory));
+      }
 
       if (maxParallelism < 1)
-        throw new ArgumentOutOfRangeException(
-            nameof(maxParallelism));
+      {
+        throw new ArgumentOutOfRangeException(nameof(maxParallelism));
+      }
 
       Directory.CreateDirectory(destinationDirectory);
 
@@ -157,12 +145,7 @@ namespace UpdateAllMyRepos2
       }
     }
 
-    private async Task<RepositorySyncResult>
-        SyncRepositoryAsync(
-            GitHubRepository repository,
-            string destinationDirectory,
-            IProgress<RepositorySyncProgress> progress,
-            CancellationToken cancellationToken)
+    private async Task<RepositorySyncResult> SyncRepositoryAsync(GitHubRepository repository, string destinationDirectory, IProgress<RepositorySyncProgress> progress, CancellationToken cancellationToken)
     {
       var result = new RepositorySyncResult
       {
@@ -260,8 +243,7 @@ namespace UpdateAllMyRepos2
                   Password = _token
                 };
 
-        cloneOptions.FetchOptions.OnTransferProgress =
-    transferProgress =>
+        cloneOptions.FetchOptions.OnTransferProgress = transferProgress =>
     {
       cancellationToken.ThrowIfCancellationRequested();
 
@@ -269,14 +251,10 @@ namespace UpdateAllMyRepos2
 
       if (transferProgress.TotalObjects > 0)
       {
-        percent =
-            (int)(
-                transferProgress.ReceivedObjects * 100.0 /
-                transferProgress.TotalObjects);
+        percent = (int)(transferProgress.ReceivedObjects * 100.0 / transferProgress.TotalObjects);
       }
 
-      progress?.Report(
-          new RepositorySyncProgress
+      progress?.Report(new RepositorySyncProgress
           {
             Repository = repository,
             Status = RepositorySyncStatus.Cloning,
@@ -297,24 +275,16 @@ namespace UpdateAllMyRepos2
       {
         cancellationToken.ThrowIfCancellationRequested();
 
-        using (var repository =
-            new Repository(repositoryPath))
+        using (var repository = new Repository(repositoryPath))
         {
-          var signature =
-              new Signature(
-                  "GitHubBackup",
-                  "backup@localhost",
-                  DateTimeOffset.Now);
+          var signature = new Signature("GitHubBackup", "backup@localhost", DateTimeOffset.Now);
 
           var pullOptions = new PullOptions
           {
-            FetchOptions =
-                  new FetchOptions
+            FetchOptions = new FetchOptions
                   {
                     CredentialsProvider =
-                          (url,
-                           usernameFromUrl,
-                           types) =>
+                          (url,usernameFromUrl, types) =>
                               new UsernamePasswordCredentials
                               {
                                 Username = "x-access-token",
@@ -323,18 +293,13 @@ namespace UpdateAllMyRepos2
                   }
           };
 
-          Commands.Pull(
-              repository,
-              signature,
-              pullOptions);
+          Commands.Pull(repository, signature, pullOptions);
         }
 
       }, cancellationToken);
     }
 
-    private static int CalculatePercent(
-        int current,
-        int total)
+    private static int CalculatePercent(int current, int total)
     {
       if (total <= 0)
       {
