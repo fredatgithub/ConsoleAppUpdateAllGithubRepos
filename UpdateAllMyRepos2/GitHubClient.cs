@@ -280,6 +280,11 @@ namespace UpdateAllMyRepos2
               return true;
             };
 
+        Console.WriteLine($"Repository : {repository.FullName}");
+        Console.WriteLine($"clone_url  : {repository.CloneUrl}");
+        Console.WriteLine($"html_url   : {repository.HtmlUrl}");
+        Console.WriteLine($"destination: {destinationPath}");
+        
         Repository.Clone(
             repository.CloneUrl,
             destinationPath,
