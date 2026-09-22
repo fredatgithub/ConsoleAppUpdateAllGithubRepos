@@ -5,6 +5,10 @@ VisualStudioVersion = 17.14.37710.0 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppUpdateAllGithubRepos", "ConsoleAppUpdateAllGithubRepos\ConsoleAppUpdateAllGithubRepos.csproj", "{09C73D23-51A8-41D8-B99F-BEC30CCE1D59}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAllMyRepos", "UpdateAllMyRepos\UpdateAllMyRepos.csproj", "{CFB462D2-5E2D-4171-9F82-B8EC4470A741}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAllMyRepos2", "UpdateAllMyRepos2\UpdateAllMyRepos2.csproj", "{DED9FE36-9BF5-414E-97D1-CF38FEAB4F7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{09C73D23-51A8-41D8-B99F-BEC30CCE1D59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09C73D23-51A8-41D8-B99F-BEC30CCE1D59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09C73D23-51A8-41D8-B99F-BEC30CCE1D59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFB462D2-5E2D-4171-9F82-B8EC4470A741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFB462D2-5E2D-4171-9F82-B8EC4470A741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFB462D2-5E2D-4171-9F82-B8EC4470A741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFB462D2-5E2D-4171-9F82-B8EC4470A741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DED9FE36-9BF5-414E-97D1-CF38FEAB4F7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DED9FE36-9BF5-414E-97D1-CF38FEAB4F7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DED9FE36-9BF5-414E-97D1-CF38FEAB4F7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DED9FE36-9BF5-414E-97D1-CF38FEAB4F7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

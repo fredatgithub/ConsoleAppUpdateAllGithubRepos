@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace ConsoleAppUpdateAllGithubRepos
 {
   internal class Program
   {
-    static void Main()
+    static async Task Main()
     {
       Action<string> display = Console.WriteLine;
       display("Update all Github repositories");
@@ -16,6 +18,16 @@ namespace ConsoleAppUpdateAllGithubRepos
       display("Please make sure you have a valid Github username set in the GITHUB_USERNAME environment variable.");
       display("Please make sure you have a valid Github email set in the GITHUB_EMAIL environment variable.");
 
+      string token = "ghp_xxxxxxxxxxxxxxxxxxxx";
+
+      var github = new GitHubClient(token);
+
+      List<GitHubRepository> repositories = await github.GetAllRepositoriesAsync();
+
+      foreach (var repo in repositories)
+      {
+        Console.WriteLine(repo.FullName);
+      }
 
       display("Press any key to continue...");
       Console.ReadKey();
