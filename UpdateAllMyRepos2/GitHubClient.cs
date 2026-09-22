@@ -46,9 +46,7 @@ namespace UpdateAllMyRepos2
 
       while (true)
       {
-        string url = $"user/repos?per_page={perPage}" +
-            $"&page={page}" +
-            "&affiliation=owner,collaborator,organization_member";
+        string url = $"user/repos?per_page={perPage}" + $"&page={page}" + "&affiliation=owner,collaborator,organization_member";
 
         using (HttpResponseMessage response = await _httpClient.GetAsync(url, cancellationToken))
         {
@@ -226,6 +224,71 @@ namespace UpdateAllMyRepos2
     }
 
     private async Task CloneRepositoryAsync(
+    GitHubRepository repository,
+    string destinationPath,
+    IProgress<RepositorySyncProgress> progress,
+    CancellationToken cancellationToken)
+    {
+      if (repository == null)
+        throw new ArgumentNullException(nameof(repository));
+
+      if (string.IsNullOrWhiteSpace(repository.CloneUrl))
+      {
+        throw new InvalidOperationException(
+            $"L'URL de clonage est absente pour " +
+            $"le repository '{repository.FullName}'.");
+      }
+
+      await Task.Run(() =>
+      {
+        var cloneOptions = new CloneOptions();
+
+        cloneOptions.FetchOptions.CredentialsProvider =
+            (url, usernameFromUrl, types) =>
+                new UsernamePasswordCredentials
+                {
+                  Username = "x-access-token",
+                  Password = _token
+                };
+
+        cloneOptions.FetchOptions.OnTransferProgress =
+            transferProgress =>
+            {
+              cancellationToken.ThrowIfCancellationRequested();
+
+              int percent = 0;
+
+              if (transferProgress.TotalObjects > 0)
+              {
+                percent =
+                    (int)(
+                        transferProgress.ReceivedObjects * 100.0 /
+                        transferProgress.TotalObjects);
+              }
+
+              progress?.Report(
+                  new RepositorySyncProgress
+                  {
+                    Repository = repository,
+                    Status =
+                          RepositorySyncStatus.Cloning,
+                    Percent = percent,
+                    Message =
+                          $"Clone : {percent}%"
+                  });
+
+              return true;
+            };
+
+        Repository.Clone(
+            repository.CloneUrl,
+            destinationPath,
+            cloneOptions);
+
+      }, cancellationToken);
+    }
+
+    private async Task CloneRepositoryAsync2(
         GitHubRepository repository,
         string destinationPath,
         IProgress<RepositorySyncProgress> progress,
@@ -264,7 +327,11 @@ namespace UpdateAllMyRepos2
 
       return true;
     };
+        Console.WriteLine($"Repository : {repository.FullName}");
 
+        Console.WriteLine($"clone_url  : {repository.CloneUrl}");
+
+        Console.WriteLine($"html_url   : {repository.HtmlUrl}");
         Repository.Clone(repository.CloneUrl, destinationPath, cloneOptions);
       }, cancellationToken);
     }

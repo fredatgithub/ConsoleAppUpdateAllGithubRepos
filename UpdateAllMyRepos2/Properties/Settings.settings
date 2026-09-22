@@ -5,5 +5,8 @@
     <Setting Name="BackupGitDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)">D:\GitHubBackup</Value>
     </Setting>
+    <Setting Name="GithubToken" Type="System.String" Scope="User">
+      <Value Profile="(Default)">to be input</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -34,5 +34,17 @@ namespace UpdateAllMyRepos2.Properties {
                 this["BackupGitDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("to be input")]
+        public string GithubToken {
+            get {
+                return ((string)(this["GithubToken"]));
+            }
+            set {
+                this["GithubToken"] = value;
+            }
+        }
     }
 }

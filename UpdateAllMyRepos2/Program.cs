@@ -10,13 +10,27 @@ namespace UpdateAllMyRepos2
     static async Task Main()
     {
 
-      string token = "github_pat_xxxxxxxxxxxxxxxxx";
-      token = ReadTokenFile("token.txt");
+      string token = "github_pat_enter_your_token_here";
+      //token = ReadTokenFile("token.txt");
 
       string backupDirectory = Settings.Default.BackupGitDirectory; // @"D:\GitHubBackup";
+      if (!Directory.Exists(backupDirectory))
+      {
+        try
+        {
+          Directory.CreateDirectory(backupDirectory);
+        }
+        catch (Exception)
+        {
+          Console.WriteLine($"Erreur pendant la création du répertoire {backupDirectory}");
+          Environment.Exit(1);
+        }
+      }
+
       // on demande à l'utilisateur si le chemin de sauvegarde est correct
       Console.WriteLine($"Le chemin de sauvegarde est : {backupDirectory}");
       Console.WriteLine("Appuyez sur une touche pour continuer l'application ou Ctrl+C pour annuler ici et changer le chemin dans le fichier de config...");
+      
       Console.ReadKey();
 
       using (var github = new GitHubClient(token))
